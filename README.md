@@ -1,3 +1,34 @@
 # IBA-course
 
-Hello GitHub
+- [x] SQL - часть 1 (проектирование)
+- [x] SQL - часть 2 (базовые операции)
+- [x] SQL - часть 3 (продвинутые операции)
+- [x] IBM Cloud - Virtual Servers, основы Linux
+- [x] Git
+- [ ] Python - Основы
+- [ ] Python - Углубленные концепции
+- [ ] Python - Pandas
+- [ ] Python - Flask, Swagger
+- [ ] Python - Unit tests
+- [ ] Введение в Scrum
+- [ ] SQL - оптимизация запросов
+- [ ] IBM Cloud - Cloud Object Storage
+- [ ] IBM Cloud - DB2
+- [ ] IBM Cloud - CloudFoundry and CI/CD - часть 1
+- [ ] IBM Cloud - CloudFoundry and CI/CD - часть 2
+- [ ] IBM Cloud - Functions
+- [ ] Elasticsearch 1
+- [ ] Elasticsearch 2
+- [ ] Kibana
+- [ ] Spark
+- [ ] ?
+- [ ] ?
+- [ ] IBM Cloud - Container Registry, Docker
+- [ ] IBM Cloud - Kubernetes
+- [ ] IBM Cloud - Event Streams (Kafka)
+- [ ] Hadoop (Overview, HDFS, MapReduce, Yarn)
+- [ ] Hive, Hbase
+- [ ] NiFi
+- [ ] Архитектура Data Lake - часть 1
+- [ ] Архитектура Data Lake - часть 2
+- [ ] Итоговое занятие
