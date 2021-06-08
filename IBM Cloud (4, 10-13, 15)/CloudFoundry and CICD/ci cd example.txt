@@ -1,0 +1,96 @@
+--------------------------------------------------------------------------------------
+How to create new cf python app and set up Continious Delivery for it:
+
+1. Create a Cloud Foundry Sample Python App
+2. Create new GitHub repo and place the code there
+3. Open the app overview from dashboard and press Enable in Continuous delivery section
+4. Configure Continuous Delivery Toolchain:
+on the first tab leave it as it is (ibm gitlab in London region)
+on the second tab create a new key
+Press Create
+5. In the created toolchain press Add tool button and add GitHub integration.
+Authorize if needed and type the link to your existing repo 
+( like https://github.com/<your_github_user>/<your_github_repo> )
+6. Press Configure on the Git integration (created in IBM GitLab before) and open the repo created by IBM Cloud.
+It will be like https://eu-gb.git.cloud.ibm.com/<your_ibmid>/<your_cf_app_name>.
+Press Settings - General - Advanced - Delete and delete it.
+Then delete this Git integration from the toolchain.
+5. Configure Delivery Pipeline for the app. In Build Stage configuration select the branch.
+6. Run Build Stage to start your pipeline. 
+During running the deploy stage, your app will be unavailable 
+(404 Not Found: Requested route ('<your_cf_app_url>') does not exist).
+After Deploy Stage passed, you can refresh the page of your app (your cf app url).
+
+After a new commit to the branch selected in Build stage, pipeline will tun automatically.
+---------------------------------------------------------------------------------------
+
+
+Another CI/CD Example
+---------------
+
+Deployment steps
+
+Continuous delivery is enabled for new version of app to automate builds, tests, and deployments through the Delivery Pipeline, GitHub, and more.
+You can view the toolchain for the cf app by opening app overview from  ashboard and pressing View toolchain button from Continuous delivery section.
+
+
+Example of  development process for an app
+
+1. Create new branch in binded git repo to push your updates to this branch.
+You can do it by one of possible ways:
+
+    directly from our GitHub repo
+    from Eclipse Orion Web IDE, you can find it in toolchain for the app. If it's not set, don't forget to press Create launch confuguration and save it.
+    Note: please do not use Stop or Deploy the app from Workspace buttons, it won't push changes to github and won't start the Pipeline for CI (continious integration)
+    from git repo on your local machine (you can find info about binding it with our GitHub repo later in this section)
+
+2. Select branch created for your task in Delivery Pipeline Build Stage
+Go to Toolchains, select the app, then press Delivery Pipeline.
+You should press Stage Configuration icon on Build Stage and select Configure Stage. Then in Input tab change branch from master to your branch.
+
+Pipeline Overview:
+There are currently 3 stages in Pipeline: Build Stage, Deploy to test url, Deploy Stage
+The logic is following: Build Stage job runs whenever a change is pushed to Git. If it succeed, Deploy to test url runs.
+Test url looks like test-"${CF_APP}".
+The Deploy script (for Deploy job) for Deploy to test url stage looks like:
+
+#!/bin/bash
+
+if ! cf app test-"${CF_APP}"; then  
+  cf push test-"${CF_APP}" -n test-"${CF_APP}"
+else
+  cf delete test-"${CF_APP}" -f
+  cf push test-"${CF_APP}" -n test-"${CF_APP}"
+fi
+
+And finally last Deploy Stage can be run only manually by pressing Run icon after reviewing changes on test url. It deploys changes directly to prod API and deletes app with test url.
+The Deploy script (for Deploy job) for Deploy Stage looks like:
+
+#!/bin/bash
+
+if cf app test-"${CF_APP}"; then  
+  cf delete test-"${CF_APP}" -f
+fi
+cf push $CF_APP
+
+3. Push your updates to branch created for your task
+After previous step, it leads to running Build Stage and Deploy to test url stages. When you see on the stages message Stage Passed, go to test url link and check there for your updates.
+Repeat this step as many times as you need.
+
+Notes:
+1) After config changes in stage or if it's a new stage, it should be re-run manually.
+2) If some stage fails, go to its log.
+3) Unfortunately sometimes it happens that git change doesn't trigger starting stage with selected "Run jobs whenever a change is pushed to Git".
+Our team faced the issue one time after failed GitHub integration and pressing Reconfigure on GitHub icon on Toolchain creation step.
+If the problem persists, you should recreate Toolchain for the app.
+
+4. Create pull request to master branch on GitHub
+Do it after review of test url app. Wait for merging your branch to master and go to the next step.
+
+5. Change branch to master in Delivery Pipeline Build Stage
+If it doesn't start automatically, press Run on Build Stage. When Deploy to test url stage passed, go to test url to review changes on master for the app.
+If everything works, go to the last step.
+
+6. Press Run on Deploy Stage
+It applies changes directly to prod API and deletes app with test url.
+

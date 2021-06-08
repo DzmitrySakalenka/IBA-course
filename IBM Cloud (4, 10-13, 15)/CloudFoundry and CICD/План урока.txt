@@ -1,0 +1,207 @@
+python app
+
+- Положить пару файлов в свой COS бакет
+- Написать на питоне приложение, которое выводит список ваших объектов из бакета
+- Добавить кнопку "Write to db2 table", при нажатии на которую в таблицу записывается этот список (все данные в таблице перезаписываются).
+Oдна строка - одно название файла, например  cat.jpg или test_to_load/sub1/dog1.jpg для файла с префиксом. Столбец всего один, для названия.
+
+Код в папке в архиве
+
+Описание содержимого
+1) secret/credentials.json
+
+
+cos :
+reader-HMAC креды (можно и writer, но для задачи достаточно reader) 
++
+db2 креды
+
+create table for_app
+(
+filename varchar(10000)
+) 
+
+
+2) Procfile
+https://www.cloudfoundry.org/blog/build-cf-push-learn-procfiles/
+https://docs.cloudfoundry.org/buildpacks/prod-server.html
+
+
+Текстовый файл, содержащий команду, чтобы выполнить приложение на IBM Cloud.
+
+So basically a Procfile containing
+
+web: python app.py
+
+is telling cf to start a named process called web, and to run python app.py when it starts.
+
+About Procfiles
+One reason to use a Procfile is specify a start command for buildpacks where a default start command is not provided. 
+Some buildpacks, such as Python, that work on a variety of frameworks, do not attempt to provide a default start command.
+
+Another reason to use a Procfile is to configure a production server for web apps.
+
+A Procfile enables you to declare required runtime processes, called process types, for your web app. 
+Process managers in a server use the process types to run and manage the workload. 
+In a Procfile, you declare one process type per line and use the following syntax:
+
+PROCESS_TYPE: COMMAND
+PROCESS_TYPE is web. A web process handles HTTP traffic.
+COMMAND is the command line to launch the process.
+
+For example, a Procfile with the following content starts the launch script created by the build process for a Java app:
+
+web: build/install/MY-PROJECT-NAME/bin/MY-PROJECT-NAME
+
+
+3) README.md
+
+4) manifest.yml
+https://docs.cloudfoundry.org/devguide/deploy-apps/manifest-attributes.html
+
+Выводит список подробностей вашего приложения, необходимых при передаче приложения в IBM Cloud.
+
+Manifests provide consistency and reproducibility, and can help you automate deploying apps. 
+Both manifests and command line options allow you to override the default attribute values of cf push. 
+These attributes include things like number of instances, disk space limit, and memory limit.
+
+cf push follows rules of precedence when setting attribute values:
+
+    Manifests override most recent values, including defaults and values set by commands such as cf scale.
+    Command line options override manifests.
+
+For a full list of attributes you can specify in an app manifest, see 
+https://docs.cloudfoundry.org/devguide/deploy-apps/manifest-attributes.html
+
+
+random-route
+If you push your app without specifying any route-related CLI options or app manifest flags, the cf CLI attempts to generate a route based on the app name, which can cause collisions.
+
+You can use the random-route attribute to generate a unique route and avoid name collisions. 
+When you use random-route, the cf CLI generates an HTTP route with a random host (if host is not set) or a TCP route with an unused port number.
+
+See the following example use cases:
+
+You deploy the same app to multiple spaces for testing purposes. In this situation, you can use random-route to randomize routes declared with the route attribute in the app manifest.
+You use an app manifest for a classroom training exercise in which multiple users deploy the same app to the same space.
+The command line option that overrides this attribute is --random-route.
+
+256 mb - limit in cf for free tier
+
+
+
+5) runtime.txt 
+- environment
+https://cloud.ibm.com/docs/openwhisk?topic=openwhisk-runtimes  
+python: 3.7.10 currently 
+
+Указывает версию Python, которую надо запустить на IBM Cloud.
+
+
+6) requirements.txt
+https://blog.usejournal.com/why-and-how-to-make-a-requirements-txt-f329c685181e
+
+Выводит список пакетов и версий, требуемых вашим приложением при его передаче в IBM Cloud.
+
+
+7) .gitignore
+
+Specifies intentionally untracked files to ignore
+
+https://git-scm.com/docs/gitignore
+
+
+8)templates/main.html
+
+Веб-страница HTML вашего веб-приложения.
+
+9) main.py
+
+all app logic 
+
+https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-python
+https://cloud.ibm.com/docs/cloud-object-storage-infrastructure?topic=cloud-object-storage-infrastructure-using-python
+boto3
+
+https://www.ibm.com/support/knowledgecenter/SSEPGG_11.1.0/com.ibm.swg.im.dbclient.python.doc/doc/t0054387.html
+ibm_db
+
+
+VCAP
+https://github.com/IBM-Cloud/cloud-sql-database/issues/2
+https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-cloud-foundry
+
+-----------------------------------------------------------------------
+to run app locally
+------------------------------------------------------------------------
+
+в cmd
+python -m pip install -r D:\test-app-py-cos-db2\requirements.txt
+
+python D:\test-app-py-cos-db2\main.py
+
+http://localhost:8000/
+
+if __name__ == '__main__':
+    #the commented line below is for cf
+    #with open("./secret/credentials.json", "r") as read_file:   
+    with open("D:\\test-app-py-cos-db2\\secret\\credentials.json", "r") as read_file:
+        data = json.load(read_file)
+
+
+
+-----------------------------------------------------------------------
+deploy your app in cf
+-----------------------------------------------------------------------
+
+https://cloud.ibm.com/docs/cli
+Выполните Step 1 - установка IBM Cloud CLI, затем перезагрузите компьютер и выполните Step 2 (в cmd) - проверка, что всё установилось.
+
+Далее установка cf:
+ibmcloud cf install
+
+https://cloud.ibm.com/cloudfoundry/overview
+
+--
+- Create sample python app in IBM Cloud CloudFoundry
+- From db2 on cloud service instance create the connection for the app
+
+--type the commands:
+
+cd D:/test-app-py-cos-db2-cf-2021/
+ibmcloud login
+ibmcloud target -r eu-gb
+ibmcloud target --cf
+ibmcloud cf push
+
+-- to check logs
+ibmcloud cf logs test-app-py-cos-db2-2021111 --recent
+
+---------------------------------------------------------------------
+to make changes in yor git repo from the pc
+---------------------------------------------------------------------
+
+https://git-scm.com/download/win 
+
+-- перейти в нужную папку
+git clone https://github.com/<your_username>/<your_project>.git
+
+git add .
+
+git status
+
+git commit -m "Add project"
+git push --set-upstream origin master
+
+git commit -m "memory to 128" --попробовали внетси изменения
+
+--------------------------------------------------------------------------------------------------------------------
+ССЫЛКИ
+
+https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-python
+https://cloud.ibm.com/docs/cloud-object-storage-infrastructure?topic=cloud-object-storage-infrastructure-using-python
+
+https://www.ibm.com/support/knowledgecenter/SSEPGG_11.1.0/com.ibm.swg.im.dbclient.python.doc/doc/t0054387.html
+ibm_db
+
+
