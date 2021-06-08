@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Main page
+{% endblock %}
+
+{% block body %}
+<h1>Main page</h1>
+    <table class="table table-hover">
+    	<thead>
+        <tr>
+            <th scope="col">Filename</th>
+            <th scope="col">Size</th>
+            <th scope="col">Last modified</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+    	  {% for file in files %}
+    		<tr>
+    			<td>
+        			{{ file[0] }}
+        		</td>
+    			<td>{{ file[1] }} </td>
+    			<td>{{ file[2] }} </td>
+    		</tr>
+    		{% endfor %}
+        </tbody>
+	</table>
+{% endblock %}
