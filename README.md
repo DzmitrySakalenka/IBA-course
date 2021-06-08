@@ -5,24 +5,21 @@
 - [x] SQL - часть 3 (продвинутые операции)
 - [x] IBM Cloud - Virtual Servers, основы Linux
 - [x] Git
-- [ ] Python - Основы
-- [ ] Python - Углубленные концепции
-- [ ] Python - Pandas
-- [ ] Python - Flask, Swagger
-- [ ] Python - Unit tests
-- [ ] Введение в Scrum
-- [ ] SQL - оптимизация запросов
-- [ ] IBM Cloud - Cloud Object Storage
-- [ ] IBM Cloud - DB2
-- [ ] IBM Cloud - CloudFoundry and CI/CD - часть 1
-- [ ] IBM Cloud - CloudFoundry and CI/CD - часть 2
-- [ ] IBM Cloud - Functions
-- [ ] Elasticsearch 1
-- [ ] Elasticsearch 2
-- [ ] Kibana
-- [ ] Spark
-- [ ] ?
-- [ ] ?
+- [x] Python - Основы
+- [x] Python - Углубленные концепции
+- [x] Python - Pandas
+- [x] Python - Flask
+- [x] Python - Unit tests
+- [x] Введение в Scrum
+- [x] SQL - оптимизация запросов
+- [x] IBM Cloud - Cloud Object Storage
+- [x] IBM Cloud - DB2
+- [x] IBM Cloud - CloudFoundry and CI/CD
+- [x] IBM Cloud - Functions
+- [x] Elasticsearch 1
+- [x] Elasticsearch 2
+- [x] Kibana
+- [x] Spark
 - [ ] IBM Cloud - Container Registry, Docker
 - [ ] IBM Cloud - Kubernetes
 - [ ] IBM Cloud - Event Streams (Kafka)
