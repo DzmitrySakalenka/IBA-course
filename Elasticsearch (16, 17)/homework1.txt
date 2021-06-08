@@ -1,0 +1,154 @@
+Задания:
+1) Завести Elasticsearch Cluster в Европе
+2) Создать индекс с временнЫми данными из любой предметной области. Mapping должен быть кастомным, при этом должны быть как анализируемые текстовые поля, так и keyword (чтобы соответствовало смыслу). Дата должна быть в формате дата, а также должны присутствовать числовые данные. Новые текстовые поля должны индексироваться только как keyword.  На одном из keyword полей выключите doc_values. Одно из полей не должно индексироваться вовсе.
+3) Написать сложный bool запрос с различными видами queries и написать словами, что он показывает.
+4) Написать сложную агрегацию с sub-buckets и сортировкой по метрикам и написать словами, что она показывает. Ответ должен содержать только результаты агрегации, но не сами документы. 
+5) Прислать скрипт
+
+
+PUT weather
+{
+  "mappings": 
+  {
+    "properties": 
+    {
+      "@datetime":
+      {
+        "type":"date",
+        "format":"YYYY-MM-DD"
+      },
+      "country": 
+      {
+        "type": "keyword", 
+        "doc_values": false
+      },
+      "city": {"type" : "keyword"},
+      "temp": {"type" : "float"},
+      "humidity": {"type" : "float"},
+      "pressure": {"type" : "float"},
+      "visibility": {"type" : "float"},
+      "wind_speed": {"type" : "float"},
+      "desc": {"enabled": false}
+    }
+  }
+}
+
+PUT weather/_doc/1
+{
+  "datetime": "2020-10-10",
+  "country": "Belarus",
+  "city": "Brest",
+  "temp": 10,
+  "humidity": 0.85,
+  "pressure": 1.0112,
+  "visibility": 14.48,
+  "wind_speed": 14,
+  "desc": "rain"
+}
+
+PUT weather/_doc/3
+{
+  "datetime": "2020-10-10",
+  "country": "France",
+  "city": "Brest",
+  "temp": 15,
+  "humidity": 0.85,
+  "pressure": 1.0112,
+  "visibility": 14.48,
+  "wind_speed": 14,
+  "desc": "rain"
+}
+
+PUT weather/_doc/2
+{
+  "datetime": "2020-11-10",
+  "country": "France",
+  "city": "Brest",
+  "temp": 8,
+  "humidity": 0.47,
+  "pressure": 1.005,
+  "visibility": 16.68,
+  "wind_speed": 8,
+  "desc": "clear"
+}
+
+PUT weather/_doc/4
+{
+  "datetime": "2020-10-10",
+  "country": "Belarus",
+  "city": "Brest",
+  "temp": 12,
+  "humidity": 0.85,
+  "pressure": 1.0112,
+  "visibility": 14.48,
+  "wind_speed": 14,
+  "desc": "rain"
+}
+
+
+Запрос выдает документы, 
+где температура близка к или ниже 10, 
+влажность близка к или выше 85%, 
+в не французком Бресте, 
+с приоритетом на наличие дождя.
+
+GET weather/_search
+{
+  "query": {
+    "bool": {
+      "must":
+      [
+        {
+          "match": {"city": "Brest"}
+        }
+      ],
+      "must_not":
+      [
+        {
+          "match": {"country": "France"}
+        }
+      ],
+      "should": 
+      [
+        {
+          "match_phrase": {"desc": "rain" }
+        },
+        {
+          "range": 
+          {
+            "temp": {"lte": 10}
+          }
+        },
+        {
+          "range": 
+          {
+            "humidity": {"lte": 85}
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+GET weather/_search
+{
+  "size": 0,
+  "aggs": {
+    "date_hist":
+    {
+      "date_histogram": {
+        "field": "datetime",
+        "interval": "day",
+        "order": {
+          "avg_temp": "asc"
+        }
+      },
+      "aggs": {
+        "avg_temp": {
+          "avg": {"field": "temp"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,66 @@
+1) Создать индекс elasticsearch_cluster с динамическим маппингом с информацией об инстансах созданного ELK стека (в каких регионах созданы, какой продукт, для Elasticsearch – какой вид нода, является ли текущим мастером). Информацию берите из deployment на клауде. У индекса должно быть 3 primary shards и 3 replica shards.
+2) Развернуть эластиксерч кластер из 3х нодов в докере. 
+3) Прислать скриншот из Cluster Monitoring (вкладка Nodes) и elasticsearch.yml файлы
+
+
+PUT /elasticsearch_cluster
+{
+  "settings": {},
+  "mappings": {}
+}
+
+POST elasticsearch_cluster/_doc/0
+{
+	"zone": "eu-central-1a",
+	"type": "AWS.DATA.HIGHIO.I3",
+	"num": "0",
+	"version": "7.12.1",
+	"role": {
+		"master eligible": "true",
+		"data": "true",
+		"coordinating": "true",
+		"ingest": "true",
+		"master": "true",
+		"ML": "false"
+	}
+}
+
+POST elasticsearch_cluster/_doc/1
+{
+	"zone": "eu-central-1b",
+	"type": "AWS.APM.R5D",
+	"num": "0",
+	"version": "7.12.1"
+}
+
+POST elasticsearch_cluster/_doc/2
+{
+	"zone": "eu-central-1b",
+	"type": "AWS.DATA.HIGHIO.I3",
+	"num": 0,
+	"version": "7.12.1",
+	"role": {
+		"master eligible": false,
+		"data": true,
+		"coordinating": true,
+		"ingest": true,
+		"master": true,
+		"ML": false
+	}
+}
+
+POST elasticsearch_cluster/_doc/4
+{
+	"zone": "eu-central-1c",
+	"type": "AWS.MASTER.R5D",
+	"num": 0,
+	"version": "7.12.1",
+	"role": {
+		"master eligible": true,
+		"data": false,
+		"coordinating": false,
+		"ingest": false,
+		"master": true,
+		"ML": false
+	}
+}
