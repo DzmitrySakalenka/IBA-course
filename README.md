@@ -20,7 +20,7 @@
 - [x] Elasticsearch 2
 - [x] Kibana
 - [x] Spark
-- [ ] IBM Cloud - Container Registry, Docker
+- [x] IBM Cloud - Container Registry, Docker
 - [ ] IBM Cloud - Kubernetes
 - [ ] IBM Cloud - Event Streams (Kafka)
 - [ ] Hadoop (Overview, HDFS, MapReduce, Yarn)
