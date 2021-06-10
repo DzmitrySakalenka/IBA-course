@@ -25,6 +25,7 @@ b651b5afece1   nginx   "/docker-entrypoint.…"   49 seconds ago   Exited (0) 9 
 ❯ docker ps -a
 CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS     NAMES
 f9716b05174c   nginx:latest   "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   80/tcp    magical_pike
+❯ docker images
 REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
 nginx        latest    d1a364dc548d   2 weeks ago   133MB
 
